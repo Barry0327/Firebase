@@ -21,6 +21,7 @@
 		97831E7122433A3700F54386 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97831E6F22433A3700F54386 /* ArticleTableViewCell.swift */; };
 		97831E7222433A3700F54386 /* ArticleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97831E7022433A3700F54386 /* ArticleTableViewCell.xib */; };
 		97831E7422433DFC00F54386 /* ArticleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97831E7322433DFC00F54386 /* ArticleTableViewController.swift */; };
+		97831E78224370BA00F54386 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97831E77224370BA00F54386 /* Article.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		97831E6F22433A3700F54386 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		97831E7022433A3700F54386 /* ArticleTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleTableViewCell.xib; sourceTree = "<group>"; };
 		97831E7322433DFC00F54386 /* ArticleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewController.swift; sourceTree = "<group>"; };
+		97831E77224370BA00F54386 /* Article.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				649F422420438D2E00B21997 /* GroceryItem.swift */,
+				97831E77224370BA00F54386 /* Article.swift */,
 				649F422320438D2E00B21997 /* User.swift */,
 			);
 			path = Models;
@@ -266,6 +269,7 @@
 			files = (
 				649F422020438D1B00B21997 /* LoginViewController.swift in Sources */,
 				649F422120438D1B00B21997 /* OnlineUsersTableViewController.swift in Sources */,
+				97831E78224370BA00F54386 /* Article.swift in Sources */,
 				649F422520438D2E00B21997 /* User.swift in Sources */,
 				649F422220438D1B00B21997 /* GroceryListTableViewController.swift in Sources */,
 				97831E7422433DFC00F54386 /* ArticleTableViewController.swift in Sources */,

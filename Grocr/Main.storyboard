@@ -180,7 +180,7 @@
         <!--Grocery List-->
         <scene sceneID="GDd-Ja-sb5">
             <objects>
-                <tableViewController title="Grocery List" id="WRG-qR-ebT" customClass="GroceryListTableViewController" customModule="Grocr" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Grocery List" id="WRG-qR-ebT" customClass="ArticleTableViewController" customModule="Grocr" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="rzx-FE-o1H">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

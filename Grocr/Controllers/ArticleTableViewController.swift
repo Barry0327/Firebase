@@ -12,7 +12,8 @@ import Firebase
 class ArticleTableViewController: UITableViewController {
 
     var user: User!
-
+    var articles: [Article] = []
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -40,6 +41,8 @@ class ArticleTableViewController: UITableViewController {
 
                 self.user.firstname = firstname
                 self.user.lastname = lastname
+
+                print(self.user)
             })
         }
         
