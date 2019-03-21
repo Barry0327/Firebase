@@ -13,7 +13,7 @@ class ArticleTableViewController: UITableViewController {
 
     var user: User!
     var articles: [Article] = []
-    
+    let ref = Database.database().reference(withPath: "article-list")
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -66,5 +66,40 @@ class ArticleTableViewController: UITableViewController {
 
         return 160
         
+    }
+    @IBAction func addButtonDidTouch(_ sender: Any) {
+
+        let alert = UIAlertController(title: "Article", message: "Write an Article", preferredStyle: .alert)
+
+        let writeAction = UIAlertAction(title: "Save", style: .default) { (_) in
+
+            guard
+                let titleTextField = alert.textFields?.first,
+                let title = titleTextField.text,
+                let contentTextField = alert.textFields?[1],
+                let content = contentTextField.text else { return }
+
+            let newArticle = Article(title: title,
+                                     content: content,
+                                     author: self.user.firstname)
+
+            let articleRef = self.ref.child(title.lowercased())
+            articleRef.setValue(newArticle.toAnyObject())
+            
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alert.addTextField(configurationHandler: { (titleText) in
+            titleText.placeholder = "title"
+        })
+        alert.addTextField(configurationHandler: { (contentText) in
+            contentText.placeholder = "conttent"
+        })
+
+        alert.addAction(writeAction)
+        alert.addAction(cancelAction)
+
+        present(alert, animated: true)
     }
 }

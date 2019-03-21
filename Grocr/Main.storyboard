@@ -219,7 +219,7 @@
                     <navigationItem key="navigationItem" title="Grocery List" id="OJg-kh-Sh2">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="QGM-U2-dHv">
                             <connections>
-                                <action selector="addButtonDidTouch:" destination="WRG-qR-ebT" id="5P0-iy-CPv"/>
+                                <action selector="addButtonDidTouch:" destination="WRG-qR-ebT" id="lea-5f-6rJ"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
