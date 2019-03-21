@@ -11,7 +11,7 @@ import Firebase
 
 class ArticleTableViewController: UITableViewController {
 
-    
+    var user: User!
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -24,6 +24,24 @@ class ArticleTableViewController: UITableViewController {
 
         tableView.register(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
 
+
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+
+            guard let user = user else { return }
+            self.user = User.init(authData: user)
+
+            let userListRef = Database.database().reference(withPath: "users")
+            let currentUserRef = userListRef.child(self.user.uid)
+            currentUserRef.observe(.value, with: { (snapshot) in
+
+                guard let info = snapshot.value as? [String: String] else { return }
+                let firstname = info["firstname"] ?? ""
+                let lastname = info["lastname"] ?? ""
+
+                self.user.firstname = firstname
+                self.user.lastname = lastname
+            })
+        }
         
     }
 

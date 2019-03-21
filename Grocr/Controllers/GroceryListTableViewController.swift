@@ -42,7 +42,6 @@ class GroceryListTableViewController: UITableViewController {
     let userRef = Database.database().reference(withPath: "online")
 
 
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -52,6 +51,7 @@ class GroceryListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+
         tableView.allowsMultipleSelectionDuringEditing = false
 
         userCountBarButtonItem = UIBarButtonItem(title: "1",
@@ -60,8 +60,6 @@ class GroceryListTableViewController: UITableViewController {
                                                  action: #selector(userCountButtonDidTouch))
         userCountBarButtonItem.tintColor = UIColor.white
         navigationItem.leftBarButtonItem = userCountBarButtonItem
-
-        user = User(uid: "FakeId", email: "hungry@person.food")
 
         self.userRef.observe(.value) { (snapshot) in
 
@@ -95,6 +93,20 @@ class GroceryListTableViewController: UITableViewController {
             self.user = User(authData: user)
 
             // Monitoring User's Online Status
+            let userListRef = Database.database().reference(withPath: "users")
+            let currentUser = userListRef.child(self.user.uid)
+            currentUser.observe(.value, with: { (snapshot) in
+
+                guard let info = snapshot.value as? [String: String]
+                    else { return }
+                let firstname = info["firstname"]
+                let lastname = info["lastname"]
+                self.user.firstname = firstname ?? ""
+                self.user.lastname = lastname ?? ""
+                print(self.user)
+
+            })
+
 
             let currentUserRef = self.userRef.child(self.user.uid)
 
@@ -145,15 +157,15 @@ class GroceryListTableViewController: UITableViewController {
     }
 
     func toggleCellCheckbox(_ cell: UITableViewCell, isCompleted: Bool) {
-//        if !isCompleted {
-//            cell.accessoryType = .none
-//            cell.textLabel?.textColor = .black
-//            cell.detailTextLabel?.textColor = .black
-//        } else {
-//            cell.accessoryType = .checkmark
-//            cell.textLabel?.textColor = .gray
-//            cell.detailTextLabel?.textColor = .gray
-//        }
+        //        if !isCompleted {
+        //            cell.accessoryType = .none
+        //            cell.textLabel?.textColor = .black
+        //            cell.detailTextLabel?.textColor = .black
+        //        } else {
+        //            cell.accessoryType = .checkmark
+        //            cell.textLabel?.textColor = .gray
+        //            cell.detailTextLabel?.textColor = .gray
+        //        }
         if isCompleted {
             cell.accessoryType = .checkmark
             cell.textLabel?.textColor = .gray
