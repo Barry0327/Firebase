@@ -9,12 +9,13 @@
 import UIKit
 
 class ArticleTableViewCell: UITableViewCell {
+
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var author: UILabel!
     @IBOutlet weak var content: UILabel!
     @IBOutlet weak var likeButton: UIButton!
-    
     @IBOutlet weak var date: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

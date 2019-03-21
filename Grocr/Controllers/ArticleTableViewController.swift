@@ -45,7 +45,7 @@ class ArticleTableViewController: UITableViewController {
                 print(self.user)
             })
         }
-
+        
         self.ref.observe(.value) { (snapshot) in
 
             var newArticles: [Article] = []
@@ -77,6 +77,7 @@ class ArticleTableViewController: UITableViewController {
         cell.title.text = self.articles[indexPath.row].title
         cell.content.text = self.articles[indexPath.row].content
         cell.author.text = self.articles[indexPath.row].author
+        cell.date.text = self.articles[indexPath.row].createdDate
 
         return cell
     }
@@ -100,7 +101,8 @@ class ArticleTableViewController: UITableViewController {
 
             let newArticle = Article(title: title,
                                      content: content,
-                                     author: self.user.firstname)
+                                     author: self.user.firstname
+                                     )
 
             let articleRef = self.ref.child(title.lowercased())
             articleRef.setValue(newArticle.toAnyObject())
