@@ -39,6 +39,7 @@ class GroceryListTableViewController: UITableViewController {
     var user: User!
     var userCountBarButtonItem: UIBarButtonItem!
     let ref = Database.database().reference(withPath: "grocery-items")
+    let userRef = Database.database().reference(withPath: "online")
 
 
 
@@ -62,6 +63,15 @@ class GroceryListTableViewController: UITableViewController {
 
         user = User(uid: "FakeId", email: "hungry@person.food")
 
+        self.userRef.observe(.value) { (snapshot) in
+
+            if snapshot.exists() {
+                self.userCountBarButtonItem.title = snapshot.childrenCount.description
+            } else {
+                self.userCountBarButtonItem.title = "0"
+            }
+        }
+
         self.ref.queryOrdered(byChild: "completed").observe(.value) { (snapshot) in
 
             var newItems: [GroceryItem] = []
@@ -83,6 +93,14 @@ class GroceryListTableViewController: UITableViewController {
 
             guard let user = user else { return }
             self.user = User(authData: user)
+
+            // Monitoring User's Online Status
+
+            let currentUserRef = self.userRef.child(self.user.uid)
+
+            currentUserRef.setValue(self.user.email)
+
+            currentUserRef.onDisconnectRemoveValue()
         }
     }
 

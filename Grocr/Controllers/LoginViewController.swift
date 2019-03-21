@@ -92,6 +92,8 @@ class LoginViewController: UIViewController {
 
             let emailField = alert.textFields![0]
             let passwordField = alert.textFields![1]
+            let firstnameField = alert.textFields![2]
+            let lastnameField = alert.textFields![3]
 
             Auth.auth().createUser(
                 withEmail: emailField.text!,
@@ -99,7 +101,10 @@ class LoginViewController: UIViewController {
 
                     if error == nil {
 
-                        Auth.auth().signIn(withEmail: self.textFieldLoginEmail.text!, password: self.textFieldLoginPassword.text!)
+                        let userRef = Database.database().reference(withPath: "users")
+
+                        guard let user = user else { return }
+                        userRef.child(user.uid).setValue(["firstname": firstnameField.text, "lastname": lastnameField.text])
                     }
 
             })
@@ -115,6 +120,12 @@ class LoginViewController: UIViewController {
         alert.addTextField { textPassword in
             textPassword.isSecureTextEntry = true
             textPassword.placeholder = "Enter your password"
+        }
+        alert.addTextField { textFirstname in
+            textFirstname.placeholder = "Enter your firstname"
+        }
+        alert.addTextField { textLastname in
+            textLastname.placeholder = "Enter your lastname"
         }
 
         alert.addAction(saveAction)
