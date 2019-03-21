@@ -21,6 +21,10 @@ class ArticleTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let logOutButton = UIBarButtonItem(title: "Sign out", style: .plain, target: self, action: #selector(signOutDidTouch))
+        logOutButton.tintColor = .white
+        self.navigationItem.leftBarButtonItem = logOutButton
+
         tableView.allowsMultipleSelectionDuringEditing = false
 
         tableView.register(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
@@ -101,7 +105,7 @@ class ArticleTableViewController: UITableViewController {
 
             let newArticle = Article(title: title,
                                      content: content,
-                                     author: self.user.firstname
+                                     author: "\(self.user.firstname) \(self.user.lastname)"
                                      )
 
             let articleRef = self.ref.child(title.lowercased())
@@ -122,5 +126,18 @@ class ArticleTableViewController: UITableViewController {
         alert.addAction(cancelAction)
 
         present(alert, animated: true)
+    }
+
+    @objc func signOutDidTouch() {
+
+        if Auth.auth().currentUser != nil {
+
+            do {
+                try Auth.auth().signOut()
+                self.dismiss(animated: true, completion: nil)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
