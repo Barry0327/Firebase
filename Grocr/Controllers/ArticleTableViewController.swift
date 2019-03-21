@@ -45,19 +45,38 @@ class ArticleTableViewController: UITableViewController {
                 print(self.user)
             })
         }
-        
+
+        self.ref.observe(.value) { (snapshot) in
+
+            var newArticles: [Article] = []
+
+            for child in snapshot.children {
+
+                if let snapshot = child as? DataSnapshot,
+                    let article = Article(snapShot: snapshot) {
+
+                    newArticles.append(article)
+                }
+            }
+            self.articles = newArticles
+            self.tableView.reloadData()
+        }
     }
 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 2
+        return articles.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ArticleTableViewCell", for: indexPath) as? ArticleTableViewCell
             else { fatalError("Please Check Cell ID") }
+
+        cell.title.text = self.articles[indexPath.row].title
+        cell.content.text = self.articles[indexPath.row].content
+        cell.author.text = self.articles[indexPath.row].author
 
         return cell
     }
