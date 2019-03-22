@@ -13,7 +13,7 @@ class ArticleTableViewController: UITableViewController {
 
     var user: User!
     var articles: [Article] = []
-    let ref = Database.database().reference(withPath: "article-list")
+    let articleListDB = Database.database().reference(withPath: "article-list")
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -50,7 +50,7 @@ class ArticleTableViewController: UITableViewController {
             })
         }
         
-        self.ref.observe(.value) { (snapshot) in
+        self.articleListDB.observe(.value) { (snapshot) in
 
             var newArticles: [Article] = []
 
@@ -62,6 +62,18 @@ class ArticleTableViewController: UITableViewController {
                     newArticles.append(article)
                 }
             }
+            // Test to print all articles created by current user
+            for child in snapshot.children {
+                guard
+                    let snapshot = child as? DataSnapshot,
+                    let article = Article(snapShot: snapshot) else { return }
+
+                if article.author == "\(self.user.firstname) \(self.user.lastname)" {
+                    print(article.title)
+                    print(article.key)
+                }
+            }
+
             self.articles = newArticles
             self.tableView.reloadData()
         }
@@ -82,6 +94,14 @@ class ArticleTableViewController: UITableViewController {
         cell.content.text = self.articles[indexPath.row].content
         cell.author.text = self.articles[indexPath.row].author
         cell.date.text = self.articles[indexPath.row].createdDate
+        cell.likeButton.addTarget(self, action: #selector(likeDidPressed), for: .touchUpInside)
+
+        // Check if user is already liked the article
+        for uid in articles[indexPath.row].whoLikedThis {
+            if uid == self.user.uid {
+                cell.likeButton.tintColor = .red
+            }
+        }
 
         return cell
     }
@@ -108,8 +128,8 @@ class ArticleTableViewController: UITableViewController {
                                      author: "\(self.user.firstname) \(self.user.lastname)"
                                      )
 
-            let articleRef = self.ref.child(title.lowercased())
-            articleRef.setValue(newArticle.toAnyObject())
+            let newAricleDB = self.articleListDB.childByAutoId()
+            newAricleDB.setValue(newArticle.toAnyObject())
             
         }
 
@@ -138,6 +158,31 @@ class ArticleTableViewController: UITableViewController {
             } catch {
                 print(error.localizedDescription)
             }
+        }
+    }
+
+    @objc func likeDidPressed(_ sender: UIButton) {
+
+        guard
+            let cell = sender.superview?.superview as? ArticleTableViewCell,
+            let indexPath = tableView.indexPath(for: cell),
+            let currentUserUID = Auth.auth().currentUser?.uid
+            else { fatalError("Failed to get the cell from like button")}
+
+        var article = self.articles[indexPath.row]
+        let articleLikedDB = self.articleListDB.child(article.key).child("whoLikedThis")
+
+        if cell.likeButton.tintColor == .gray {
+
+            cell.likeButton.tintColor = .red
+            article.whoLikedThis.append(currentUserUID)
+            articleLikedDB.setValue(article.whoLikedThis)
+
+        } else {
+
+            cell.likeButton.tintColor = .gray
+            let newArray = article.whoLikedThis.filter { $0 != currentUserUID}
+            articleLikedDB.setValue(newArray)
         }
     }
 }

@@ -73,6 +73,7 @@ class GroceryListTableViewController: UITableViewController {
         self.ref.queryOrdered(byChild: "completed").observe(.value) { (snapshot) in
 
             var newItems: [GroceryItem] = []
+
             for child in snapshot.children {
 
                 if let snapshot = child as? DataSnapshot,
@@ -93,19 +94,6 @@ class GroceryListTableViewController: UITableViewController {
             self.user = User(authData: user)
 
             // Monitoring User's Online Status
-            let userListRef = Database.database().reference(withPath: "users")
-            let currentUser = userListRef.child(self.user.uid)
-            currentUser.observe(.value, with: { (snapshot) in
-
-                guard let info = snapshot.value as? [String: String]
-                    else { return }
-                let firstname = info["firstname"]
-                let lastname = info["lastname"]
-                self.user.firstname = firstname ?? ""
-                self.user.lastname = lastname ?? ""
-                print(self.user)
-
-            })
 
 
             let currentUserRef = self.userRef.child(self.user.uid)

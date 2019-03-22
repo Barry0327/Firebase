@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class ArticleTableViewCell: UITableViewCell {
 
     @IBOutlet weak var title: UILabel!
@@ -16,9 +17,14 @@ class ArticleTableViewCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var date: UILabel!
 
+
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+
+        self.likeButton.tintColor = .gray
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

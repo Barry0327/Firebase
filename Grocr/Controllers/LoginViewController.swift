@@ -64,9 +64,7 @@ class LoginViewController: UIViewController {
             let password = textFieldLoginPassword.text,
             email.count > 0,
             password.count > 0
-            else {
-                return
-        }
+            else { return }
 
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
 
@@ -75,6 +73,7 @@ class LoginViewController: UIViewController {
                 let alert = UIAlertController(title: "Sign In Failed",
                                               message: error.localizedDescription,
                                               preferredStyle: .alert)
+
                 alert.addAction(UIAlertAction(title: "OK", style: .default))
 
                 self.present(alert, animated: true, completion: nil)
