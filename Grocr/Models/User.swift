@@ -35,6 +35,7 @@ struct User {
     let email: String
     var firstname: String = ""
     var lastname: String = ""
+    var createdArticles: [String] = []
     var likedArticleID: [String] = []
 
     init(authData: Firebase.User) {

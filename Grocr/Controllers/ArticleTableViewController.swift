@@ -47,9 +47,13 @@ class ArticleTableViewController: UITableViewController {
 
             currentUserRef.observe(.value, with: { (snapshot) in
 
-                guard let info = snapshot.value as? [String: String] else { return }
-                let firstname = info["firstname"] ?? ""
-                let lastname = info["lastname"] ?? ""
+                guard
+                    let info = snapshot.value as? [String: Any],
+                    let firstname: String = info["firstname"] as? String,
+                    let lastname: String = info["lastname"] as? String
+
+                else { return }
+
 
                 self.user.firstname = firstname
                 self.user.lastname = lastname
@@ -68,17 +72,6 @@ class ArticleTableViewController: UITableViewController {
                     let article = Article(snapShot: snapshot) {
 
                     newArticles.append(article)
-                }
-            }
-            // Test to print all articles created by current user
-            for child in snapshot.children {
-                guard
-                    let snapshot = child as? DataSnapshot,
-                    let article = Article(snapShot: snapshot) else { return }
-
-                if article.author == "\(self.user.firstname) \(self.user.lastname)" {
-                    print(article.title)
-                    print(article.key)
                 }
             }
 
@@ -139,7 +132,10 @@ class ArticleTableViewController: UITableViewController {
 
             let newAricleDB = self.articleListDB.childByAutoId()
             newAricleDB.setValue(newArticle.toAnyObject())
-            
+            self.user.createdArticles.append(newAricleDB.key)
+            let currentUserRef = self.userListRef.child(self.user.uid)
+            currentUserRef.child("createdArticles").setValue(self.user.createdArticles)
+
         }
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -196,8 +192,8 @@ class ArticleTableViewController: UITableViewController {
             cell.likeButton.tintColor = .gray
             let newArray = article.whoLikedThis.filter { $0 != currentUserUID}
             articleLikedDB.setValue(newArray)
-            let newUserLikedArray = self.user.likedArticleID.filter {$0 != article.key}
-            currentUserRef.child("likedArticleID").setValue(newUserLikedArray)
+            self.user.likedArticleID = self.user.likedArticleID.filter {$0 != article.key}
+            currentUserRef.child("likedArticleID").setValue(self.user.likedArticleID)
 
         }
     }
