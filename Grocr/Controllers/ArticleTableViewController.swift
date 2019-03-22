@@ -14,6 +14,9 @@ class ArticleTableViewController: UITableViewController {
     var user: User!
     var articles: [Article] = []
     let articleListDB = Database.database().reference(withPath: "article-list")
+    let userListRef = Database.database().reference(withPath: "users")
+
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -21,8 +24,13 @@ class ArticleTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let logOutButton = UIBarButtonItem(title: "Sign out", style: .plain, target: self, action: #selector(signOutDidTouch))
+        let logOutButton = UIBarButtonItem(title: "Sign out",
+                                           style: .plain,
+                                           target: self,
+                                           action: #selector(signOutDidTouch))
+
         logOutButton.tintColor = .white
+        
         self.navigationItem.leftBarButtonItem = logOutButton
 
         tableView.allowsMultipleSelectionDuringEditing = false
@@ -35,8 +43,8 @@ class ArticleTableViewController: UITableViewController {
             guard let user = user else { return }
             self.user = User.init(authData: user)
 
-            let userListRef = Database.database().reference(withPath: "users")
-            let currentUserRef = userListRef.child(self.user.uid)
+            let currentUserRef = self.userListRef.child(self.user.uid)
+
             currentUserRef.observe(.value, with: { (snapshot) in
 
                 guard let info = snapshot.value as? [String: String] else { return }
@@ -97,6 +105,7 @@ class ArticleTableViewController: UITableViewController {
         cell.likeButton.addTarget(self, action: #selector(likeDidPressed), for: .touchUpInside)
 
         // Check if user is already liked the article
+
         for uid in articles[indexPath.row].whoLikedThis {
             if uid == self.user.uid {
                 cell.likeButton.tintColor = .red
@@ -171,18 +180,25 @@ class ArticleTableViewController: UITableViewController {
 
         var article = self.articles[indexPath.row]
         let articleLikedDB = self.articleListDB.child(article.key).child("whoLikedThis")
+        let currentUserRef = self.userListRef.child(self.user.uid)
 
         if cell.likeButton.tintColor == .gray {
 
             cell.likeButton.tintColor = .red
+
             article.whoLikedThis.append(currentUserUID)
             articleLikedDB.setValue(article.whoLikedThis)
+            self.user.likedArticleID.append(article.key)
+            currentUserRef.child("likedArticleID").setValue(self.user.likedArticleID)
 
         } else {
 
             cell.likeButton.tintColor = .gray
             let newArray = article.whoLikedThis.filter { $0 != currentUserUID}
             articleLikedDB.setValue(newArray)
+            let newUserLikedArray = self.user.likedArticleID.filter {$0 != article.key}
+            currentUserRef.child("likedArticleID").setValue(newUserLikedArray)
+
         }
     }
 }

@@ -106,6 +106,7 @@
 				645D78A0204344160093B00C /* LaunchScreen.storyboard */,
 				97831E6C2241EDE000F54386 /* GoogleService-Info.plist */,
 				645D78A3204344160093B00C /* Info.plist */,
+				97831E7922449BDD00F54386 /* Original Project File */,
 				97831E6F22433A3700F54386 /* ArticleTableViewCell.swift */,
 				97831E7022433A3700F54386 /* ArticleTableViewCell.xib */,
 			);
@@ -115,7 +116,6 @@
 		649F421B20438CBC00B21997 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				649F422420438D2E00B21997 /* GroceryItem.swift */,
 				97831E77224370BA00F54386 /* Article.swift */,
 				649F422320438D2E00B21997 /* User.swift */,
 			);
@@ -125,12 +125,20 @@
 		649F421C20438CC100B21997 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				649F421F20438D1B00B21997 /* GroceryListTableViewController.swift */,
 				649F421D20438D1A00B21997 /* LoginViewController.swift */,
-				649F421E20438D1A00B21997 /* OnlineUsersTableViewController.swift */,
 				97831E7322433DFC00F54386 /* ArticleTableViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		97831E7922449BDD00F54386 /* Original Project File */ = {
+			isa = PBXGroup;
+			children = (
+				649F422420438D2E00B21997 /* GroceryItem.swift */,
+				649F421F20438D1B00B21997 /* GroceryListTableViewController.swift */,
+				649F421E20438D1A00B21997 /* OnlineUsersTableViewController.swift */,
+			);
+			path = "Original Project File";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

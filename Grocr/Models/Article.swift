@@ -40,7 +40,7 @@ struct Article {
             let content = value["content"] as? String,
             let author = value["author"] as? String,
             let createdDate = value["createdDate"] as? String,
-        let whoLikedThis = value["whoLikedThis"] as? [String]
+            let whoLikedThis = value["whoLikedThis"] as? [String]
             else { return nil }
 
         self.title = title
