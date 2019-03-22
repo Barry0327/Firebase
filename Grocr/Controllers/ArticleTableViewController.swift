@@ -15,6 +15,9 @@ class ArticleTableViewController: UITableViewController {
     var articles: [Article] = []
     let articleListDB = Database.database().reference(withPath: "article-list")
     let userListRef = Database.database().reference(withPath: "users")
+    var createdAricles: [Article] = []
+
+
 
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -38,6 +41,8 @@ class ArticleTableViewController: UITableViewController {
         tableView.register(UINib(nibName: "ArticleTableViewCell", bundle: nil), forCellReuseIdentifier: "ArticleTableViewCell")
 
 
+
+
         Auth.auth().addStateDidChangeListener { (auth, user) in
 
             guard let user = user else { return }
@@ -54,11 +59,17 @@ class ArticleTableViewController: UITableViewController {
 
                 else { return }
 
+                if let createdAricles = info["createdArticles"] as? [String] {
+                    self.user.createdArticles = createdAricles
+                }
+                if let likedArticleID = info["likedArticleID"] as? [String] {
+                    self.user.likedArticleID = likedArticleID
+                }
 
                 self.user.firstname = firstname
                 self.user.lastname = lastname
 
-                print(self.user)
+//                print(self.user)
             })
         }
         
@@ -78,6 +89,7 @@ class ArticleTableViewController: UITableViewController {
             self.articles = newArticles
             self.tableView.reloadData()
         }
+
     }
 
 
@@ -135,6 +147,7 @@ class ArticleTableViewController: UITableViewController {
             self.user.createdArticles.append(newAricleDB.key)
             let currentUserRef = self.userListRef.child(self.user.uid)
             currentUserRef.child("createdArticles").setValue(self.user.createdArticles)
+            self.fetchAriclesCreatedByCurrentUser()
 
         }
 
@@ -196,5 +209,39 @@ class ArticleTableViewController: UITableViewController {
             currentUserRef.child("likedArticleID").setValue(self.user.likedArticleID)
 
         }
+    }
+
+    // Fetch all aricles created by current user
+
+    #warning("GCD not solved yet")
+
+    func fetchAriclesCreatedByCurrentUser() {
+
+
+        let createdArticlesID = self.user.createdArticles
+
+        let myGroup = DispatchGroup()
+        for articleUID in createdArticlesID {
+
+            myGroup.enter()
+            self.articleListDB.child(articleUID).observeSingleEvent(of: .value) { snapshot in
+
+                guard
+                    snapshot.exists(),
+                    let article = Article(snapShot: snapshot)
+                else { fatalError() }
+
+                print(article)
+                self.createdAricles.append(article)
+                myGroup.leave()
+            }
+
+            myGroup.notify(queue: .main) {
+                print("finished all work!")
+                print(self.createdAricles)
+            }
+        }
+
+
     }
 }
